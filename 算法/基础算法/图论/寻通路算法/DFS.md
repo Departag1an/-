@@ -32,7 +32,7 @@ int Map[RowMax][ColumnMax] = { INIT };
 set<pair<int, int>> directions = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
 
 // 深度优先搜索函数
-int BFS(int Map[RowMax][ColumnMax], int sx, int sy, int ex, int ey, int rows, int columns) {
+int DFS(int Map[RowMax][ColumnDMax], int sx, int sy, int ex, int ey, int rows, int columns) {
     stack<pair<int, int>> s; // 用于存储待处理的位置
     set<pair<int, int>> visited; // 记录已访问的位置
 
@@ -89,4 +89,89 @@ int main() {
 }
 
 ```
-- 求路径
+- 求所有路径
+  - 分治-结果存储：对可以到达终点的每一条路径都进行存储
+  
+```C++
+#include <stack>
+#include <set>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+const int RowMax = 1e3 + 5; // 行最大值
+const int ColumnMax = 1e3 + 5; // 列最大值
+#define INIT 0 // 初始值
+
+// 地图
+int Map[RowMax][ColumnMax] = { INIT };
+set<pair<int, int>> directions = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
+
+// 深度优先搜索函数
+void DFS(int x, int y, int ex, int ey, int rows, int columns, vector<pair<int, int>>& path, vector<vector<pair<int, int>>>& allPaths, set<pair<int, int>>& visited) {
+    // 如果到达目标位置，存储当前路径
+    if (x == ex && y == ey) {
+        allPaths.push_back(path);
+        return;
+    }
+
+    // 扩展相邻位置
+    for (const auto& dir : directions) {
+        int newX = x + dir.first;
+        int newY = y + dir.second;
+
+        // 检查位置是否合法
+        if (newX >= 0 && newX < rows && newY >= 0 && newY < columns && Map[newX][newY] == 0) {
+            pair<int, int> newPos = { newX, newY };
+            if (visited.find(newPos) == visited.end()) {
+                // 记录当前路径
+                path.push_back(newPos);
+                visited.insert(newPos); // 标记为已访问
+                // 递归调用 DFS
+                DFS(newX, newY, ex, ey, rows, columns, path, allPaths, visited);
+                // 回溯
+                path.pop_back();
+                visited.erase(newPos); // 解除访问标记
+            }
+        }
+    }
+}
+
+int main() {
+    int r, c;
+    int sx, sy, ex, ey;
+    cin >> r >> c;
+    cin >> sx >> sy >> ex >> ey;
+
+    // 输入地图
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            cin >> Map[i][j];
+        }
+    }
+
+    vector<pair<int, int>> path; // 当前路径
+    vector<vector<pair<int, int>>> allPaths; // 所有路径
+    set<pair<int, int>> visited; // 记录已访问的位置
+
+    // 将起点加入路径
+    path.push_back({sx, sy});
+    visited.insert({sx, sy});
+
+    // 执行 DFS
+    DFS(sx, sy, ex, ey, r, c, path, allPaths, visited);
+
+    // 输出所有路径
+    cout << "All paths from (" << sx << ", " << sy << ") to (" << ex << ", " << ey << "):" << endl;
+    for (const auto& p : allPaths) {
+        for (const auto& coord : p) {
+            cout << "(" << coord.first << ", " << coord.second << ") ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
+
+```
