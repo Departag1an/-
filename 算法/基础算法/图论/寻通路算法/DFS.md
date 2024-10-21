@@ -15,6 +15,7 @@
 - 路径vector
 
 ## 算法模板
+* 可达性
 ```C++
 #include <stack>
 #include <set>
@@ -32,7 +33,7 @@ set<pair<int, int>> directions = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
 
 // 深度优先搜索函数
 int BFS(int Map[RowMax][ColumnMax], int sx, int sy, int ex, int ey, int rows, int columns) {
-    stack<pair<int, int>> s; // 队列用于存储待处理的位置
+    stack<pair<int, int>> s; // 用于存储待处理的位置
     set<pair<int, int>> visited; // 记录已访问的位置
 
     pair<int, int> start = { sx, sy };
@@ -82,9 +83,10 @@ int main() {
         }
     }
 
-    // 执行 BFS
+    // 执行 DFS
     DFS(Map, sx, sy, ex, ey, r, c);
     return 0;
 }
 
 ```
+- 求路径
