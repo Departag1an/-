@@ -16,7 +16,7 @@
 
 ## 算法模板
 ```C++
-#include <queue>
+#include <stack>
 #include <set>
 #include <iostream>
 #include <vector>
@@ -30,18 +30,18 @@ const int ColumnMax = 1e3 + 5; // 列最大值
 int Map[RowMax][ColumnMax] = { INIT };
 set<pair<int, int>> directions = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
 
-// 广度优先搜索函数
+// 深度优先搜索函数
 int BFS(int Map[RowMax][ColumnMax], int sx, int sy, int ex, int ey, int rows, int columns) {
-    queue<pair<int, int>> q; // 队列用于存储待处理的位置
+    stack<pair<int, int>> s; // 队列用于存储待处理的位置
     set<pair<int, int>> visited; // 记录已访问的位置
 
     pair<int, int> start = { sx, sy };
-    q.push(start);
+    s.push(start);
     visited.insert(start);
 
-    while (!q.empty()) {
-        pair<int, int> current = q.front();
-        q.pop();
+    while (!s.empty()) {
+        pair<int, int> current = s.top();
+        s.pop();
 
         // 检查是否到达目标位置
         if (current.first == ex && current.second == ey) {
@@ -58,7 +58,7 @@ int BFS(int Map[RowMax][ColumnMax], int sx, int sy, int ex, int ey, int rows, in
             if (newX >= 0 && newX < rows && newY >= 0 && newY < columns) {
                 pair<int, int> newPos = { newX, newY };
                 if (visited.find(newPos) == visited.end() && Map[newX][newY] == 0) {
-                    q.push(newPos);
+                    s.push(newPos);
                     visited.insert(newPos); // 标记为已访问
                 }
             }
@@ -83,7 +83,7 @@ int main() {
     }
 
     // 执行 BFS
-    BFS(Map, sx, sy, ex, ey, r, c);
+    DFS(Map, sx, sy, ex, ey, r, c);
     return 0;
 }
 
