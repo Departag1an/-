@@ -99,17 +99,27 @@
 
 ### set/multiset  
 
+**set里面不含重复的元素，multiset可以含重复的元素**
+
         insert()  插入一个数  
         find()  查找一个数  
         count()  返回某一个数的个数  
         erase()  
-            (1) 输入是一个数x，删除所有x   O(k + logn)  
+            (1) 输入是一个数x，删除所有x   O(k + logn) k是x的个数  
             (2) 输入一个迭代器，删除这个迭代器  
-        lower_bound()/upper_bound()  
+        lower_bound()/upper_bound()
             lower_bound(x)  返回大于等于x的最小的数的迭代器  
             upper_bound(x)  返回大于x的最小的数的迭代器  
 
 ### map/multimap  
+    
+#### 特点
+
+1. 键值对存储，即每个元素是一个pair，first为键，second为值
+2. 唯一键：map的键是唯一的，multimap的键可以重复
+3. 有序性：自动根据键排序(通常是按升序)
+
+#### 用法
 
         insert()  插入的数是一个pair  
         erase()  输入的参数是pair或者迭代器  
@@ -124,6 +134,7 @@
 
 ## bitset, 圧位  
 
+**可以省8倍的空间**
     bitset<10000> s;  
     ~, &, |, ^  
     >>, <<  
