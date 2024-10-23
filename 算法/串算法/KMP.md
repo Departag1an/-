@@ -69,4 +69,74 @@ int main() {
 }
 ```
 输出:   **9** 
+
+
+### 模版类
+```c++
+#include <iostream>
+#include <vector>
+
+#include <string>
+
+
+template <typename T> 
+class Pattern{
+private:
+	T pattern;
+	std::vector<int> next;
+	void getNext() {
+		int m = pattern.size();
+		next.resize(m);
+		next[0] = 0;
+		for (int i = 1, j = 0; i < m; i++) {
+			while (j>0&&pattern[i] != pattern[j]) j = next[j - 1];
+			if (j>0&&pattern[i] == pattern[j] )j++;
+			next[i] = j;
+		}
+	}
+public:
+	Pattern(const T&pat):pattern(pat) {
+		getNext();
+	}
+	std::vector<int> findIn(const T &text) {
+		std::vector<int> res;
+		int t = text.size();
+		int m = pattern.size();
+		for (int i = 0, j = 0; i < t; i++) {
+			while (j>0&& pattern[j] != text[i])j = next[j - 1];
+			if (j<m&&pattern[j] ==text[i])j++;
+			if (j == m)
+			{
+				res.push_back(i-j+1);
+			
+				j = next[j - 1];
+			}
+		}
+		return res;
+	}
+};
+
+
+int main() {
+
+	std::string text;
+	std::string pattern;
+	std::cin >> text;
+	std::cin >> pattern;
+
+
+
+
+
+	Pattern<std::string> patt (pattern);
+	std::vector<int> a = patt.findIn(text);
+	for (auto i : a) {
+		std:: cout << i << " ";
+	}
+	std::cout << std::endl;
+
+	return 0;
+}
+
+```
 #### 代码剖析
