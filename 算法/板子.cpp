@@ -37,7 +37,7 @@ void out(Dtype x) {
 	else { out(x / 10); putchar(x % 10 + '0'); }
 }
 
-
+// 高精度
 
 int main() {
 	Dtype x;
@@ -47,3 +47,6 @@ int main() {
 
 	return 0;
 }
+
+
+
