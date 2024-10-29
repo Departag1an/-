@@ -42,5 +42,72 @@ int query(char *str)
 
 ## 分析
 
+idx是节点编号,从0开始,在创建新节点时递增。
 
 
+## 例题
+
+### 最大异或和  
+
+在给定的整数数组中，找到两个数，使得它们的异或值最大，并输出这个最大值。  
+输入格式:第一行输入一个整数N:第二行输入N个整数。  
+输出格式：输出一个整数，表示答案。
+
+```C++
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+const int N = 1e5 + 10;
+int n;
+int a[N];
+int son[N * 31][2], idx;
+
+void insert(int x)
+{
+    int p = 0;
+    for (int i = 30; i >= 0; i--)
+    {
+        int u = x >> i & 1;
+        if (!son[p][u])
+            son[p][u] = ++idx;
+        p = son[p][u];
+    }
+}
+
+int query(int x)
+{
+    int p = 0, res = 0;
+    for (int i = 30; i >= 0; i--)
+    {
+        int u = x >> i & 1;
+        if (son[p][!u])
+        {
+            res = res * 2 + !u;
+            p = son[p][!u];
+        }
+        else
+        {
+            res = res * 2 + u;
+            p = son[p][u];
+        }
+    }
+    return res;
+}
+
+int main()
+{
+    cin >> n;
+    for (int i = 0; i < n; i++)
+        cin >> a[i];
+    int res = 0;
+    for (int i = 0; i < n; i++)
+    {
+        insert(a[i]);
+        res = max(res, query(a[i]));
+    }
+    cout << res << endl;
+    return 0;
+
+        }
+```
