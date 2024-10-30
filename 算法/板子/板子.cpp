@@ -40,8 +40,6 @@ void out(Dtype x) {
 
 
 
-
-
 int main() {
 	Dtype x;
 	in(&x);
