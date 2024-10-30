@@ -13,7 +13,9 @@
 
 
 ## 算法步骤
-## 算法模板
+## 容器算法模板
+
+
 ```C++
 #include <queue>
 #include <set>
@@ -187,4 +189,82 @@ int main() {
 
     return 0;
 }
+```
+
+
+
+
+
+
+## 数组模板
+```C++
+queue<int> q;
+st[1] = true; // 表示1号点已经被遍历过
+q.push(1);
+
+while (q.size())
+{
+    int t = q.front();
+    q.pop();
+
+    for (int i = h[t]; i != -1; i = ne[i])
+    {
+        int j = e[i];
+        if (!st[j])
+        {
+            st[j] = true; // 表示点j已经被遍历过
+            q.push(j);
+        }
+    }
+}
+```
+
+## 例题
+
+走迷宫 https://www.acwing.com/problem/content/846/
+```C++
+#inlude <iostream>
+#include <cstring>
+#include<algorithm>
+
+using namespace std;
+
+const int N = 110;
+typedef pair<int, int> PII;
+int n, m;
+int g[N][N];//地图
+int d[N][N];//距离
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
+PII q[N * N];
+int  bfs()
+{
+    q[0]={0,0};
+    int hh=0,tt=-1;
+    memset(d,-1,sizeof d);
+    d[0][0]=0;
+    while(hh<=tt)
+    {
+        auto t=q[hh++];
+        for(int i=0;i<4;i++)
+        {
+            int x=t.first+dx[i],y=t.second+dy[i];
+            if(x>=0 && x<n && y>=0 && y<m && g[x][y] == 0 && d[x][y] == -1)
+            {
+                q[++tt]={x,y};
+                d[x][y]=d[t.first][t.second]+1;
+            }
+        }
+    }
+    return d[n-1][m-1];
+}
+
+int main()
+{
+    cin >> n >> m;
+   for(int i=0;i<n;i++)
+    for(int j=0;j<m;j++)
+        cin>>g[i][j];
+    cout<<bfs()<<endl;
+}
+
 ```

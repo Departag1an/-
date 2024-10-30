@@ -96,5 +96,6 @@
     "stdexcept": "cpp",
     "streambuf": "cpp",
     "typeinfo": "cpp"
-  }
+  },
+  "Codegeex.RepoIndex": true
 }
