@@ -179,6 +179,7 @@ int main() {
 ```
 
 ## 数组算法模板
+- **普式DFS,一般用于生成全排列**
 ```C++
 int n;
 int path[N]; 
@@ -205,44 +206,4 @@ void dfs(int u)
 
 ## 例题
 
-### [皇后问题](https://ac.nowcoder.com/acm/problem/235813)
-
-#### 代码
-
-```C++
-#include <bits/stdc++.h>
-using namespace std;
-
-const int N = 21;
-int n;
-bool col[N], dg[N], udg[N];
-int ans;
-
-void dfs(int u)
-{
-    if (u == n)
-    {
-        ans++;
-        return;
-    }
-    for (int i = 0; i < n; i++)
-    {
-        if (!col[i] && !dg[u + i] && !udg[u - i + n])
-        {
-            col[i] = dg[u + i] = udg[u - i + n] = true;
-            dfs(u + 1);
-            col[i] = dg[u + i] = udg[u - i + n] = false;
-        }
-    }
-}
-
-int main()
-{
-    cin >> n;
-    dfs(0);
-    cout << ans << endl;
-    return 0;
-}
-```
-## 深度优先遍历
-
+皇后问题
