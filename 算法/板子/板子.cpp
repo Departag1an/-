@@ -29,7 +29,7 @@ using namespace std;
 
 // 通用调试函数
 template<typename T>
-void debug(const T & container) {
+void debug(const T& container) {
 	for (const auto& e : container) {
 		cout << e << " ";
 	}
@@ -38,7 +38,7 @@ void debug(const T & container) {
 
 // 特化调试函数用于 map 和 unordered_map
 template<typename K, typename V>
-void debug(const std::map<K, V>&mp) {
+void debug(const std::map<K, V>& mp) {
 	for (const auto& e : mp) {
 		cout << e.first << ": " << e.second << " ";
 	}
@@ -46,7 +46,7 @@ void debug(const std::map<K, V>&mp) {
 }
 
 template<typename K, typename V>
-void debug(const std::unordered_map<K, V>&umap) {
+void debug(const std::unordered_map<K, V>& umap) {
 	for (const auto& e : umap) {
 		cout << e.first << ": " << e.second << " ";
 	}
@@ -55,24 +55,28 @@ void debug(const std::unordered_map<K, V>&umap) {
 
 // 特化调试函数用于 pair
 template<typename T1, typename T2>
-void debug(const std::pair<T1, T2>&p) {
+void debug(const std::pair<T1, T2>& p) {
 	cout << "(" << p.first << ", " << p.second << ")" << endl;
 }
 
 // 特化调试函数用于 tuple（不使用 C++17 的 std::apply）
 template<typename T1, typename T2, typename T3>
-void debug(const std::tuple<T1, T2, T3>&t) {
+void debug(const std::tuple<T1, T2, T3>& t) {
 	cout << "(" << get<0>(t) << ", " << get<1>(t) << ", " << get<2>(t) << ")" << endl;
 }
 
-// 特化调试函数用于数组
-template<typename T, size_t N>
-void debug(const T(&arr)[N]) {
-	for (const auto& e : arr) {
-		cout << e << " ";
+
+
+//特化静态数组
+template <typename T,typename N>
+void debug(T * arr, N n) {
+	for (N i = 0; i < n; i++) {
+		cout << arr[i]<<" ";
 	}
 	cout << endl;
 }
+
+
 int in() {
 	int f = 1;
 	char chace = getchar();
@@ -106,10 +110,38 @@ void out(int x) {
 	}
 }
 
-
+//quick_sort
+void quick_sort(int q[] ,int l , int r){
+    if(l>=r) return ;
+    int x = q[l],i = l-1,j = r+1;
+    while (i<j){
+        do i++;while(q[i]<x);
+        do j--;while(q[j]>x);
+        if(i<j) swap(q[i],q[j]);
+    }
+    quick_sort(q,l,j);
+    quick_sort(q,j+1,r);
+}
 //kmp
 
-void getNext(char *pattern,int pattern_size,int * next) {
+
+int tem[100];
+
+
+void merge_sort(int q[],int l,int r){
+    if(l>=r) return;
+    int mid = l+r>>1;
+    merge_sort(q,l,mid),merge_sort(q,mid+1,r);
+    int k = 0 , i = l , j = mid+1;
+    while(i <=mid&&j<=r){
+       if (q[i]<q[j]) tem[k++] = q[i++];
+        else tem[k++] = q[j++];
+    }
+    while(i<=mid) tem[k++] = q[i++];
+    while(j<=r) tem[k++] = q[j++];
+    for (i = l ,j = 0 ; i<=r;i++,j++)q[i] = tem[j];
+}
+void getNext(char* pattern, int pattern_size, int* next) {
 	next[0] = 0;
 	for (int i = 1, j = 0; i < pattern_size; i++)
 	{
@@ -131,28 +163,26 @@ int KMP(int* next, char* pattern, int pattern_size, char* text, int text_size)
 
 
 //Trie
-#define n 1000
-int son[n][26], cnt[n], idx;
-void insert(char* str) {
-	int p = 0;
-	for (int i = 0; str[i]; i++) {
-		int u = str[i] - 'a';
-		if (!son[p][u]) son[p][u] = ++idx;
-		p = son[p][u];
-	}
-	cnt[p]++;
+#define N 1000
+int son[N][26],idx,cnt[N];
+void insert(char * str){
+    int p = 0 ; 
+    for(int i = 0 ;str[i];i++){
+        int u = str[i] -'a';
+        if(!son[p][u]) son[p][u] = ++idx;
+        p = son[p][u];
+    }
+    cnt[p]++;
 }
-int find(char* str) {
-	int p = 0;
-	for (int i = 0; str[i]; i++) {
-		int u = str[i] - 'a';
-		if (!son[p][u]) return 0;
-		p = son[p][u];
-	}
-	return cnt[p];
+int find(char *str){
+    int p = 0 ;
+    for (int i = 0 ; str[i];i++){
+        int u = str[i] - 'a';
+        if(!son[p][u])return 0 ;
+        p = son[p][u];
+    }
+    return cnt[p];
 }
-
-
 
 //bit enum
 #include<iostream>//子集枚举
@@ -173,10 +203,12 @@ void TravalBool(int x) {
 
 #endif
 
-int main() 	
+int main()
 {
 	TIE;
-	
+	char s[] = "dwar";
+    insert(s);
+    out(find(s));
 
 	return 0;
 }
