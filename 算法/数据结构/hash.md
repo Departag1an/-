@@ -108,3 +108,43 @@ ULL get(int l, int r)
 3. 判断一个字符串是否在另一个字符串中出现过
 4. 查找两个字符串的最长公共子串
 5. 去重
+
+## 例题
+
+### 1. [字符串哈希](https://www.acwing.com/problem/content/843/)
+
+```c++
+#include<bits/stdc++.h>
+using namespace std;
+
+typedef unsigned long long ULL;
+
+const int N=1e5+10,P=131;
+int n,m;
+ULL p[N],h[N];//p[N]表示p的多少次方 h[N]表示数
+char str[N];
+
+ULL get(int l,int r)
+{
+    return h[r]-h[l-1]*p[r-l+1];
+}
+int main()
+{
+    cin>>n>>m>>str+1;
+    p[0]=1;
+    for(int i=1;i<=n;i++)
+    {
+        h[i]=h[i-1]*P+str[i];//只要str[i]不是0就可以
+        p[i]=p[i-1]*P;
+    }
+    
+    while(m--)
+    {
+        int l1,l2,r1,r2;
+        cin>>l1>>r1>>l2>>r2;
+        if(get(l1,r1)==get(l2,r2))puts("Yes");
+        else puts("No");
+    }
+    return 0;
+}
+```
