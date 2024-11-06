@@ -132,6 +132,34 @@
     和上面类似，增删改查的时间复杂度是 O(1)  
     不支持 lower_bound()/upper_bound()， 迭代器的++，--  
 
+ ### unordered_map用法
+
+#### 1.简介
+- 是一个将key和value关联起来的容器，它可以高效的查找对应的value
+- key值应该是唯一的，key和value的数据类型可以不相同
+- unordered_map查询单个key的时候效率比map高，但是要查询某一范围内的key值时比map效率低。  
+- 可以使用[]操作符来访问key值对应的value值。
+
+#### 2.使用
+```C++
+unordered_map<string,int> umap; //定义
+
+umap.insert(Map::value_type("test", 1));//增加
+
+//根据key删除,如果没找到n=0
+auto n = umap.erase("test")   //删除
+
+auto it = umap.find(key) //改
+if(it != umap.end()) 
+    it->second = new_value; 
+
+
+//map中查找x是否存在
+umap.find(x) != map.end()//查
+//或者
+umap.count(x) != 0
+```
+
 ## bitset, 圧位  
 
 **可以省8倍的空间**
