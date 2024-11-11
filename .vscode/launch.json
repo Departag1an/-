@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/学习/-",
-      "program": "d:/学习/-/build/Debug/outDebug",
+      "cwd": "d:/Paper/-/vscode相关配置文件/code",
+      "program": "d:/Paper/-/vscode相关配置文件/code/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

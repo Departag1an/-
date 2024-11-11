@@ -1,77 +1,48 @@
 ```c++
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <limits>
+const int INF = INT_MAX;  // 无穷大，用于初始化最短路径
+const int MAXN = 1000;
 
-using namespace std;
+void dijkstra(int start, int n, const int graph[MAXN][MAXN]) {
+	int dist[MAXN];       // dist[i] 表示从 start 到节点 i 的最短距离
+	bool visited[MAXN];   // visited[i] 标记节点 i 是否已访问
 
-const int INF = numeric_limits<int>::max(); // 表示无穷大
+	// 初始化
+	fill(dist, dist + n, INF); // dist 数组初始化为无穷大
+	fill(visited, visited + n, false); // 所有节点未被访问
+	dist[start] = 0; // 起点的最短路径是 0
 
-struct Edge {
-    int to, weight;
-};
+	for (int i = 0; i < n; ++i) {
+		// 找到当前未访问的节点中，距离最小的节点
+		int u = -1;
+		for (int j = 0; j < n; ++j) {
+			if (!visited[j] && (u == -1 || dist[j] < dist[u])) {
+				u = j;
+			}
+		}
 
-vector<int> dijkstra(int start, const vector<vector<Edge>>& graph) {
-    int n = graph.size(); // 图的节点数
-    vector<int> dist(n, INF); // 存储每个节点到起点的最短距离
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq; // 最小堆
+		// 如果当前节点的最短距离仍然是 INF，说明剩余的节点不可达
+		if (dist[u] == INF) break;
 
-    dist[start] = 0; // 起点距离为0
-    pq.push({0, start}); // 将起点加入优先队列
+		// 标记该节点为已访问
+		visited[u] = true;
 
-    while (!pq.empty()) {
-        int d = pq.top().first; // 当前最小距离
-        int u = pq.top().second; // 当前节点
-        pq.pop();
+		// 更新与 u 相邻的节点的距离
+		for (int v = 0; v < n; ++v) {
+			if (!visited[v] && graph[u][v] != INF) {  // 存在边 u -> v
+				dist[v] = min(dist[v], dist[u] + graph[u][v]);
+			}
+		}
+	}
 
-        // 如果当前距离大于已知最短距离，跳过
-        if (d > dist[u]) continue;
-
-        // 遍历邻接节点
-        for (const auto& edge : graph[u]) {
-            int v = edge.to;
-            int weight = edge.weight;
-
-            // Relaxation
-            if (dist[u] + weight < dist[v]) {
-                dist[v] = dist[u] + weight;
-                pq.push({dist[v], v}); // 更新最短距离并加入优先队列
-            }
-        }
-    }
-
-    return dist; // 返回到各节点的最短距离
-}
-
-int main() {
-    int n, m; // n是节点数，m是边数
-    cin >> n >> m;
-
-    vector<vector<Edge>> graph(n); // 图的邻接表
-
-    for (int i = 0; i < m; ++i) {
-        int u, v, w;
-        cin >> u >> v >> w; // 输入边的起点、终点和权重
-        graph[u].push_back({v, w}); // 添加边
-        graph[v].push_back({u, w}); // 如果是无向图
-    }
-
-    int start; // 起点
-    cin >> start;
-
-    vector<int> shortest_distances = dijkstra(start, graph);
-
-    // 输出每个节点到起点的最短距离
-    for (int i = 0; i < n; ++i) {
-        if (shortest_distances[i] == INF) {
-            cout << "Node " << i << ": INFINITY" << endl;
-        } else {
-            cout << "Node " << i << ": " << shortest_distances[i] << endl;
-        }
-    }
-
-    return 0;
+	// 输出结果：打印从起点到所有节点的最短路径
+	for (int i = 0; i < n; ++i) {
+		if (dist[i] == INF) {
+			cout << "Node " << i << " is unreachable." << endl;
+		}
+		else {
+			cout << "Shortest distance to node " << i << ": " << dist[i] << endl;
+		}
+	}
 }
 
 ```
