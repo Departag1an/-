@@ -1,46 +1,48 @@
 ```c++
-const int INF = INT_MAX;  // 无穷大，用于初始化最短路径
-const int MAXN = 1000;
 
-void dijkstra(int start, int n, const int graph[MAXN][MAXN]) {
-	int dist[MAXN];       // dist[i] 表示从 start 到节点 i 的最短距离
-	bool visited[MAXN];   // visited[i] 标记节点 i 是否已访问
+const int N = 1000;		
+const int INF = 0x3f3f3f3f;
 
-	// 初始化
-	fill(dist, dist + n, INF); // dist 数组初始化为无穷大
-	fill(visited, visited + n, false); // 所有节点未被访问
-	dist[start] = 0; // 起点的最短路径是 0
+int h[N], e[N], w[N], ne[N], idx;  
+int dist[N];                       
+bool visited[N];                  
 
-	for (int i = 0; i < n; ++i) {
-		// 找到当前未访问的节点中，距离最小的节点
-		int u = -1;
-		for (int j = 0; j < n; ++j) {
-			if (!visited[j] && (u == -1 || dist[j] < dist[u])) {
-				u = j;
-			}
-		}
+void init() {
+	std::fill(h, h + N, -1);
+	idx = 0;
+}
 
-		// 如果当前节点的最短距离仍然是 INF，说明剩余的节点不可达
-		if (dist[u] == INF) break;
+ 
+void addEdge(int a, int b, int weight) {
+	e[idx] = b;
+	w[idx] = weight;
+	ne[idx] = h[a];
+	h[a] = idx++;
+}
 
-		// 标记该节点为已访问
+ 
+void dijkstra(int start) {
+	std::memset(dist, 0x3f, sizeof dist);   
+	std::memset(visited, false, sizeof visited);  
+	dist[start] = 0;
+
+	 
+	std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<>> pq;
+	pq.push({ 0, start });  
+
+	while (!pq.empty()) {
+		auto [d, u] = pq.top(); pq.pop();  
+
+		if (visited[u]) continue;           
 		visited[u] = true;
 
-		// 更新与 u 相邻的节点的距离
-		for (int v = 0; v < n; ++v) {
-			if (!visited[v] && graph[u][v] != INF) {  // 存在边 u -> v
-				dist[v] = min(dist[v], dist[u] + graph[u][v]);
+		 
+		for (int i = h[u]; i != -1; i = ne[i]) {
+			int v = e[i], weight = w[i];
+			if (dist[u] + weight < dist[v]) {   
+				dist[v] = dist[u] + weight;
+				pq.push({ dist[v], v });         
 			}
-		}
-	}
-
-	// 输出结果：打印从起点到所有节点的最短路径
-	for (int i = 0; i < n; ++i) {
-		if (dist[i] == INF) {
-			cout << "Node " << i << " is unreachable." << endl;
-		}
-		else {
-			cout << "Shortest distance to node " << i << ": " << dist[i] << endl;
 		}
 	}
 }
