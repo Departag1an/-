@@ -1,3 +1,76 @@
+## 朴素版dijkstra算法
+
+### 思路
+
+1. 初始化距离
+
+```c++
+dist[1]=0,dist[i]=0x3f
+s[]//当前已经确定最短距离的点
+```
+
+2. for循环 每次迭代找到不在s中的距离最近的点，把这个点加入s中，用这个点更新其他点的距离  
+
+3. 每次循环都确定一个最短路径的点
+
+```C++
+#include<bits/stdc++.h>
+using namespace std;
+
+const int N=510,M=1e5+10;
+
+int g[N][N],dist[N];
+bool st[N];
+int n,m;
+
+int dijkstra()
+{
+    memset(dist,0x3f,sizeof dist);
+    dist[1]=0;
+    
+    for(int i=0;i<n;i++)
+    {
+        
+    
+    //找到当前最短路的末节点
+    int t=0;
+    for(int j=1;j<=n;j++)
+    {
+        if(!st[j]&&dist[t]>dist[j])
+        t=j;
+    }
+    //t->j 不管能不能走因为n很小所以可以暴力搜索
+    for(int j=1;j<=n;j++)
+    {
+        dist[j]=min(dist[j],dist[t]+g[t][j]);
+    }
+    
+    st[t]=true;
+    }
+    if(dist[n]==0x3f3f3f3f) return -1;
+    else return dist[n];
+}
+
+int main()
+{
+    memset(g,0x3f,sizeof g);
+    cin>>n>>m;
+    for(int i=0;i<m;i++)
+    {
+        int a,b,c;
+        cin>>a>>b>>c;
+        //处理重边的情况，取最小的一条边
+        g[a][b]=min(g[a][b],c);
+    }
+    int d=dijkstra();
+    cout<<d<<endl;
+    return 0;
+}
+
+```
+
+## 堆优化的dijkstra算法
+
 ```c++
 
 const int N = 1000;		
