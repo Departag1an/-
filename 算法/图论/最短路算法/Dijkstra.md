@@ -4,7 +4,7 @@ const int N = 1000;
 const int INF = 0x3f3f3f3f;
 
 int h[N], e[N], w[N], ne[N], idx;  
-int dist[N];                       
+int dist[N];    	                   
 bool visited[N];                  
 
 void init() {
@@ -12,7 +12,7 @@ void init() {
 	idx = 0;
 }
 
- 
+	
 void addEdge(int a, int b, int weight) {
 	e[idx] = b;
 	w[idx] = weight;
@@ -35,7 +35,7 @@ void dijkstra(int start) {
 
 		if (visited[u]) continue;           
 		visited[u] = true;
-
+	
 		 
 		for (int i = h[u]; i != -1; i = ne[i]) {
 			int v = e[i], weight = w[i];
@@ -48,3 +48,5 @@ void dijkstra(int start) {
 }
 
 ```
+## 讨论
+**你们有没有发现dijkstra算法和dfs与bfs实际上很相似，他们的区别是在`维护容器`与出入维护的不同上，dijkstra算法维护的是`优先队列`，而dfs与bfs维护的是`栈`或者`队列`。而且他在'入'时贪心地维护了dist,区别也就是如此**
