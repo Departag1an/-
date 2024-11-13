@@ -72,52 +72,70 @@ int main()
 ## 堆优化的dijkstra算法
 
 ```c++
+#include<bits/stdc++.h>
+using namespace std;
 
-const int N = 1000;		
-const int INF = 0x3f3f3f3f;
+typedef pair<int,int> PII;
+const int N=151000;
 
-int h[N], e[N], w[N], ne[N], idx;  
-int dist[N];    	                   
-bool visited[N];                  
+int h[N],e[N],w[N],ne[N],idx;
 
-void init() {
-	std::fill(h, h + N, -1);
-	idx = 0;
+int n,m;
+
+bool st[N];
+int dis[N];
+void add(int a,int b,int c)
+{
+    e[idx]=b,w[idx]=c,ne[idx]=h[a],h[a]=idx++;
 }
 
-	
-void addEdge(int a, int b, int weight) {
-	e[idx] = b;
-	w[idx] = weight;
-	ne[idx] = h[a];
-	h[a] = idx++;
+int dijkstra()
+{
+    memset(dis,0x3f,sizeof dis);
+    dis[1]=0;
+    //因为小根堆自动排序 将距离最近的放在top上面
+    priority_queue<PII,vector<PII>,greater<PII>> heap;
+    heap.emplace(0,1);
+
+    while(heap.size())
+    {
+        auto t=heap.top();
+        heap.pop();
+        //拿到下标
+        int ver=t.second;
+        //已经遍历过的下标不需要再遍历
+        if(st[ver])continue;
+        st[ver]=true;
+        //遍历下标 拿到最小的下一个最小
+        for(int i=h[ver];i!=-1;i=ne[i])
+        {
+            int j=e[i];
+            //如果1-j的距离大于1-ver+ver-这个j的距离
+            //即有更小的距离 则更新
+            if(dis[j]>dis[ver]+w[i])
+            {
+                dis[j]=dis[ver]+w[i];
+                heap.emplace(dis[j],j);
+            }
+        }
+
+    }
+    if(dis[n]==0x3f3f3f3f)return -1;
+    return dis[n];
 }
 
- 
-void dijkstra(int start) {
-	std::memset(dist, 0x3f, sizeof dist);   
-	std::memset(visited, false, sizeof visited);  
-	dist[start] = 0;
-
-	 
-	std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<>> pq;
-	pq.push({ 0, start });  
-
-	while (!pq.empty()) {
-		auto [d, u] = pq.top(); pq.pop();  
-
-		if (visited[u]) continue;           
-		visited[u] = true;
-	
-		 
-		for (int i = h[u]; i != -1; i = ne[i]) {
-			int v = e[i], weight = w[i];
-			if (dist[u] + weight < dist[v]) {   
-				dist[v] = dist[u] + weight;
-				pq.push({ dist[v], v });         
-			}
-		}
-	}
+int main()
+{
+    memset(h,-1,sizeof h);
+    cin>>n>>m;
+    for(int i=0;i<m;i++)
+    {
+        int a,b,c;
+        cin>>a>>b>>c;
+        add(a,b,c);
+    }
+    cout<<dijkstra()<<endl;
+    return 0;
 }
 
 ```
