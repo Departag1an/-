@@ -72,3 +72,37 @@ int main() {
 }
 
 ```
+
+**JNMC孙国庆 的思路:`贪心`**
+```python
+
+def slove (a,b,c,d):
+    sl = a+c
+    sr = b+d
+   #维护高位和上界
+
+    res = 0
+
+    for _  in range(19):
+        if(sr==0):
+            break
+
+        bit = sr%10
+        sl//=10
+        sr//=10
+
+        if (sr<=sl):
+            res +=bit
+            continue
+        res+=9
+        sr-=(bit<9)
+
+    return res
+
+
+
+t = int(input())
+for _ in range(t):
+    a,b,c,d = map(int,input().split())
+    print(slove(a,b,c,d))
+```
