@@ -38,66 +38,46 @@ Date: 2021-08-25 16:00
 ```cpp
 #include <bits/stdc++.h>
 using namespace std;
-
-#define int long long
-
-const int N = 5e4 + 5;
-
+unordered_map<int, int> arr_1(0), arr_2(0);
 int n;
-map<int, int> cnt[2];
-
-void solve() {
+void solve (){
     cin >> n;
-    
-    // 读取两个数组并统计每个数字出现的频次
-    for (int i = 0; i < 2; i++) {
-        for (int j = 1; j <= n; j++) {
-            int x;
-            cin >> x;
-            cnt[i][x]++;
-        }
+    int tem;
+    for (int i = 0; i < n; i++) {
+        cin >> tem;
+        arr_1[tem] ++;
     }
-
-    // 计算每个数组内部需要删除的多余元素数量
-    int v[2] = { 0 };
-    for (int i = 0; i < 2; i++) {
-        for (auto& it : cnt[i]) {
-            if (it.second >= 2) {
-                v[i] += it.second - 1;  // 多余的部分需要删除
-            }
-            it.second = 1;  // 将每个元素的频次归一，表示去重
-        }
+    for (int i = 0; i < n; i++) {
+        cin >> tem;
+        arr_2[tem]++;
     }
-
-    // 初始答案是两个数组删除次数的最大值
-    int ans = max(v[0], v[1]);
-
-    // 计算两个数组之间的公共元素数量
-    int common_count = 0;
-    for (auto it : cnt[0]) {
-        if (cnt[1].count(it.first)) {
-            common_count++;  // 统计两个数组中相同的元素
-        }
+    int v1, v2;
+    v1 = 0, v2 = 0;
+    for (auto it : arr_1) {
+        v1 += max(it.second-1,0);
+        if (it.second > 1)arr_1[it.first] = 1;
     }
-
-    // 计算多余删除次数后，如何用公共元素来弥补
-    int extra = abs(v[0] - v[1]);
-    int reducible = max(0ll, (common_count - extra +1) / 2);  // 用公共元素弥补多余的删除操作
-
-    // 最终结果是原始的最大删除次数加上弥补后的次数
-    ans += reducible;
-    cout << ans;
+    for (auto it : arr_2) {
+        v2 += max(it.second - 1, 0);
+        if (it.second > 1)arr_2[it.first] = 1;
+    }
+    for (auto it : arr_2) {
+        arr_1[it.first] += it.second;
+    }
+    int x = 0;
+    for (auto it : arr_1) {
+        if (it.second == 2)x++;
+    }
+    int res = max(v1, v2) + max(0, (x - abs(v1 - v2)+1) / 2);
+    cout << res;
 }
+int main()
+{
 
-signed main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0), cout.tie(0);
+    solve();
 
-    int T = 1;
-    while (T--) {
-        solve();
+    return 0;
     }
-}
 ```
 
 ### 代码详细讲解
