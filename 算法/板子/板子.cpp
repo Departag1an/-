@@ -30,7 +30,7 @@ using namespace std;
 #define REP(it,start,end,step) for (size_t it = start ; it <end;it+=step )
 #define TIE {ios::sync_with_stdio(false);cin.tie(0);cout.tie(0);}
 
-// 通用调试函数
+
 namespace Debug {
     template<typename T>
     void debug(const T& container) {
@@ -40,7 +40,7 @@ namespace Debug {
         cout << endl;
     }
 
-    // 特化调试函数用于 map 和 unordered_map
+
     template<typename K, typename V>
     void debug(const std::map<K, V>& mp) {
         for (const auto& e : mp) {
@@ -57,19 +57,17 @@ namespace Debug {
         cout << endl;
     }
 
-    // 特化调试函数用于 pair
     template<typename T1, typename T2>
     void debug(const std::pair<T1, T2>& p) {
         cout << "(" << p.first << ", " << p.second << ")" << endl;
     }
 
-    // 特化调试函数用于 tuple（不使用 C++17 的 std::apply）
+   
     template<typename T1, typename T2, typename T3>
     void debug(const std::tuple<T1, T2, T3>& t) {
         cout << "(" << get<0>(t) << ", " << get<1>(t) << ", " << get<2>(t) << ")" << endl;
     }
 
-    //特化静态数组
     template <typename T, typename N>
     void debug(T* arr, N n) {
         for (N i = 0; i < n; i++) {
@@ -79,7 +77,7 @@ namespace Debug {
     }
 }
 
-// 输入输出相关函数
+
 namespace IO {
     int in() {
         int f = 1;
@@ -146,7 +144,7 @@ namespace Sorting {
     }
 }
 
-// KMP算法
+
 namespace KMP {
     void getNext(char* pattern, int pattern_size, int* next) {
         next[0] = 0;
@@ -167,60 +165,17 @@ namespace KMP {
     }
 }
 
-// Trie相关
-namespace Trie {
-#define N 1000
-    int son[N][26], idx, cnt[N];
 
-    void insert(char* str) {
-        int p = 0;
-        for (int i = 0; str[i]; i++) {
-            int u = str[i] - 'a';
-            if (!son[p][u]) son[p][u] = ++idx;
-            p = son[p][u];
-        }
-        cnt[p]++;
-    }
-
-    int find(char* str) {
-        int p = 0;
-        for (int i = 0; str[i]; i++) {
-            int u = str[i] - 'a';
-            if (!son[p][u]) return 0;
-            p = son[p][u];
-        }
-        return cnt[p];
-    }
-}
-
-// 其他示例：子集枚举
-namespace BitEnum {
-    void TravalBool(int x) {
-        for (int i = 0; i < x; i++) {
-            for (int p = 0; p < 31; p++) {
-                if (i & (1 << p)) {
-                    std::cout << '1';
-                }
-                else {
-                    std::cout << '0';
-                }
-            }
-            std::cout << std::endl;
-        }
-    }
-}
 
 #endif
 using namespace Debug;
-
 void slove() {
-    
+
 
 
 
 }
 int main() {
     TIE;
-    
     return 0;
 }
