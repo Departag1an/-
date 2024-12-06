@@ -4,15 +4,8 @@
 using namespace std;
 
 #define I_ERROR 0x3f3f3f3f
-#define Oend printf("\n");
-#define Ospace printf(" ");
-#define Opoint printf(".");
-#define LOut(vec) {for(int i = 0 ; i < vec.size()-1;i++){cout<<vec[i]<<" ";}cout<<vec[vec.size()-1]<<endl;} 
-#define LIn(vec){int t = 0;while (t < vec.size()) vec[t++] = in();}
-#define REP(it,start,end,step) for (size_t it = start ; it <end;it+=step )
 #define FastIOS {ios::sync_with_stdio(false);cin.tie(0);cout.tie(0);}
-
-
+#define REP(a, b, c, d) for(int a = b; a != c; a += d)
 namespace Debug {
     template<typename T>
     void debug(const T& container) {
@@ -439,11 +432,16 @@ namespace OtherType {
 using namespace Debug;
 using namespace IO;
 using namespace OtherType;
-void solve() {
+int n;
+vector<int> vec;
 
+void solve() {
+    
+    debug(vec);
 }
 int main() {
     FastIOS;
+    
     solve();
     return 0;
 }
