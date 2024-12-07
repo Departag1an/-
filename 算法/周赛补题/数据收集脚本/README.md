@@ -40,7 +40,7 @@ pip install matplotlib
 
 **使用说明**
 
-1. **运行脚本**：
+1. **运行脚本**（在main.py所在目录下运行）：
 
 ```
 python main.py
