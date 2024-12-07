@@ -34,11 +34,11 @@ int dijkstra()
     
     //找到当前最短路的末节点
     int t=0;
-    for(int j=1;j<=n;j++)
-    {
-        if(!st[j]&&dist[t]>dist[j])
-        t=j;
-    }
+        for(int j=1;j<=n;j++)
+        {
+            if(!st[j]&&dist[t]>dist[j])
+            t=j;
+        }
     //t->j 不管能不能走因为n很小所以可以暴力搜索
     for(int j=1;j<=n;j++)
     {
