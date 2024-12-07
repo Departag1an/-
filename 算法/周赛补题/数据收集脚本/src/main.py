@@ -34,11 +34,7 @@ def load_config():
 
 # ------------------------------ 中文字体设置 ------------------------------
 def set_chinese_font(config=None):
-    """
-    设置中文字体
-    如果提供了配置，尝试加载配置文件中的字体路径。
-    否则，自动在系统字体中查找支持中文的字体。
-    """
+    """ 设置中文字体 """
     font_found = False
 
     if config and "font_path" in config:
@@ -53,7 +49,6 @@ def set_chinese_font(config=None):
 
     if not font_found:
         print("正在查找系统中的中文字体...")
-
         font_paths = font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
         for font_path in font_paths:
             font_prop = font_manager.FontProperties(fname=font_path)
@@ -67,7 +62,7 @@ def set_chinese_font(config=None):
 
     if not font_found:
         print("未能加载中文字体，使用默认字体")
-        plt.rcParams['font.family'] = 'Arial'  # 如果未找到中文字体，则使用 Arial
+        plt.rcParams['font.family'] = 'Arial'
 
 
 # ------------------------------ 文件分析 ------------------------------
@@ -169,6 +164,15 @@ def print_statistics(file_info):
     plot_statistics(div_counts, type_counts, save_path)
 
 
+# ------------------------------ 定期刷新终端日志 ------------------------------
+def clear_terminal():
+    """ 清理终端输出 """
+    if sys.platform == "win32":
+        os.system("cls")  # Windows
+    else:
+        os.system("clear")  # Linux / macOS
+
+
 # ------------------------------ 主程序入口 ------------------------------
 if __name__ == "__main__":
     # 获取当前脚本的路径，并获取配置的根目录路径（如果为空，则使用脚本所在目录）
@@ -202,6 +206,7 @@ if __name__ == "__main__":
 
         interval = int(sys.argv[2])  # 定时刷新间隔（秒）
         while True:
+            clear_terminal()  # 清空终端输出
             print_statistics(file_info)
             time.sleep(interval)  # 每隔一定时间刷新一次图表
     else:
