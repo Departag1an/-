@@ -58,8 +58,8 @@ python main.py --mode 0 --interval 60
 
 ```json
 {
-    "root_directory": "path/to/data",   // 扫描的根目录
-    "png_save_directory": "output",     // 保存图表的目录
+    "root_directory": "..\\..\\",   // 扫描的根目录
+    "png_save_directory": "..\\img",     // 保存图表的目录
 }
 ```
 
@@ -68,7 +68,7 @@ python main.py --mode 0 --interval 60
 **输出**
 
 - 打印 `div1` 到 `div5` 和类型的分布。
-- 生成并保存统计图表 `output/训练数据.png`。
+- 生成并保存统计图表 `训练数据.png`。
 
 ---
 **将脚本设置为开机自启动**
