@@ -1,21 +1,48 @@
+// clang++
 {
-    "configurations": [
-        {
-            "name": "Win32",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE"
-            ],
-            "windowsSdkVersion": "10.0.22621.0",
-            "compilerPath": "E:/Mingw/mingw64/bin/g++.exe",
-            "cStandard": "c11",
-            "cppStandard": "c++11",
-            "intelliSenseMode": "${default}"
-        }
-    ],
-    "version": 4
+  "version": 4,
+  "configurations": [
+    {
+      "name": "Clang++",
+      "includePath": [
+        "E:/LLVM/include/c++/v1",  // libc++ 的路径
+        "${workspaceFolder}/**"
+      ],
+      "defines": [],
+      "compilerPath": "E:/LLVM/bin/clang++.exe",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "clang-x64",
+      "browse": {
+        "path": [
+          "E:/LLVM/include/c++/v1",  // libc++ 的路径
+          "${workspaceFolder}/**"
+        ],
+        "limitSymbolsToIncludedHeaders": true
+      }
+    }
+  ]
 }
+
+// g++
+// {
+//     "configurations": [
+//         {
+//             "name": "Win32",
+//             "includePath": [
+//                 "${workspaceFolder}/**"
+//             ],
+//             "defines": [
+//                 "_DEBUG",
+//                 "UNICODE",
+//                 "_UNICODE"
+//             ],
+//             "windowsSdkVersion": "10.0.22621.0",
+//             "compilerPath": "E:/mingw64/bin/g++.exe", // 替换
+//             "cStandard": "c17",
+//             "cppStandard": "c++17",
+//             "intelliSenseMode": "${default}"
+//         }
+//     ],
+//     "version": 4
+// }
