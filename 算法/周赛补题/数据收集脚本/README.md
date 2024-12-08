@@ -46,7 +46,7 @@ pip install matplotlib watchdog
 python main.py
 ```
 
-2. **定时刷新图表**（例如每 60 秒刷新一次）：
+2. **定时刷新图表**  （每次更新缓冲一定时间后刷新图表）：
 
 ```
 python main.py --mode 0 --interval 60
