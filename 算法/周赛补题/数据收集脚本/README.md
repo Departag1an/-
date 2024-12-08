@@ -49,7 +49,7 @@ python main.py
 2. **定时刷新图表**（例如每 60 秒刷新一次）：
 
 ```
-python main.py 1 60
+python main.py --mode 0 --interval 60
 ```
 
 3. **配置文件**：
@@ -60,7 +60,6 @@ python main.py 1 60
 {
     "root_directory": "path/to/data",   // 扫描的根目录
     "png_save_directory": "output",     // 保存图表的目录
-    "font_path": "path/to/font.ttf"     // 自定义字体路径
 }
 ```
 
@@ -72,6 +71,7 @@ python main.py 1 60
 - 生成并保存统计图表 `output/训练数据.png`。
 
 ---
+**将脚本设置为开机自启动**
 
 **许可**
 
