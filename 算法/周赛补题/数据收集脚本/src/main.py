@@ -9,6 +9,8 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import matplotlib.pyplot as plt
 from matplotlib import font_manager
+from threading import Timer  # 导入定时器
+
 
 # ------------------------------ 配置文件处理 ------------------------------
 def resource_path(relative_path):
@@ -150,24 +152,44 @@ def print_statistics(file_info, save_directory):
 # ------------------------------ 文件夹监听 ------------------------------
 class DirectoryHandler(FileSystemEventHandler):
     """ 文件夹变化事件处理 """
-    def __init__(self, directory, save_directory, mode):
+    def __init__(self, directory, save_directory, mode, interval):
         self.directory = directory
         self.save_directory = save_directory
         self.mode = mode
+        self.interval = interval
+        self.timer = None  # 定时器，用于延迟执行
 
     def on_any_event(self, event):
         """ 当任何文件发生变化时，重新扫描并更新统计 """
         if event.event_type != 'modified':  # 仅处理文件修改事件
             return
+
+        # 如果变化的文件在输出目录（例如 PNG 文件）中，则忽略
+        if event.src_path.endswith(".png"):
+            print(f"忽略变化文件: {event.src_path} (PNG 文件)")
+            return
+
+        # 如果已有定时任务正在等待，先取消它
+        if self.timer is not None:
+            self.timer.cancel()
+
         # 打印文件变化日志
         print(f"检测到变化: {event.src_path}")
+
+        # 设置定时任务：等待一段时间后更新
+        self.timer = Timer(self.interval, self.update_statistics)
+        self.timer.start()
+
+    def update_statistics(self):
+        """ 更新统计并执行操作 """
+        print("开始更新统计...")
         file_info = scan_directory(self.directory, self.mode)
         print_statistics(file_info, self.save_directory)
 
 
 def start_watching(directory, save_directory, interval, mode):
     """ 启动目录监听 """
-    event_handler = DirectoryHandler(directory, save_directory, mode)
+    event_handler = DirectoryHandler(directory, save_directory, mode, interval)
     observer = Observer()
     observer.schedule(event_handler, directory, recursive=True)
     observer.start()
@@ -190,8 +212,8 @@ if __name__ == "__main__":
         help="运行模式：1 为手动扫描模式，0 为实时监听模式（默认: 1）"
     )
     parser.add_argument(
-        "-i", "--interval", type=float, default=1.0,
-        help="监听间隔时间，仅在 0 模式下有效（单位：秒，默认: 1.0）"
+        "-i", "--interval", type=float, default=2.0,
+        help="监听间隔时间，仅在 0 模式下有效（单位：秒，默认: 2.0）"
     )
     args = parser.parse_args()
 
