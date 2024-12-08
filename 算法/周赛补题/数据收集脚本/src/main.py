@@ -3,10 +3,12 @@ import re
 import json
 import sys
 import time
-import matplotlib.pyplot as plt
+import argparse
 from collections import defaultdict
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+import matplotlib.pyplot as plt
 from matplotlib import font_manager
-
 
 # ------------------------------ 配置文件处理 ------------------------------
 def resource_path(relative_path):
@@ -116,7 +118,7 @@ def plot_statistics(div_counts, type_counts, save_path):
     print(f"统计图表已保存到：{save_path}")
 
 
-def print_statistics(file_info):
+def print_statistics(file_info, save_directory):
     """ 打印统计信息并调用可视化输出 """
     div_counts = defaultdict(int)
     type_counts = defaultdict(int)
@@ -137,77 +139,76 @@ def print_statistics(file_info):
     for t, count in type_counts.items():
         print(f"{t}: {count} 个")
 
-    # 获取脚本所在目录
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-
-    # 读取配置文件
-    config = load_config()
-
-    # 从配置文件中获取根目录路径（如果为空则使用脚本所在目录）
-    root_directory = config.get("root_directory", "")
-    if not root_directory:
-        root_directory = script_dir  # 如果为空，使用当前脚本所在目录作为根目录
-
-    print(f"自动使用根目录：{root_directory}")
-
-    # 从配置文件中获取 PNG 保存目录（相对路径）
-    png_save_directory = config.get("png_save_directory", "output")
-
-    # 拼接保存路径，确保目标文件夹存在
-    save_dir = os.path.join(script_dir, png_save_directory)
-    os.makedirs(save_dir, exist_ok=True)
-
-    # 定义保存的 PNG 路径
-    save_path = os.path.join(save_dir, "训练数据.png")
-
-    # 调用绘制并保存函数
+    # 确定保存路径
+    save_path = os.path.join(save_directory, "训练数据.png")
+    os.makedirs(save_directory, exist_ok=True)
     plot_statistics(div_counts, type_counts, save_path)
 
 
-# ------------------------------ 定期刷新终端日志 ------------------------------
-def clear_terminal():
-    """ 清理终端输出 """
-    if sys.platform == "win32":
-        os.system("cls")  # Windows
-    else:
-        os.system("clear")  # Linux / macOS
+# ------------------------------ 文件夹监听 ------------------------------
+class DirectoryHandler(FileSystemEventHandler):
+    """ 文件夹变化事件处理 """
+    def __init__(self, directory, save_directory):
+        self.directory = directory
+        self.save_directory = save_directory
+
+    def on_any_event(self, event):
+        """ 当任何文件发生变化时，重新扫描并更新统计 """
+        print(f"检测到变化: {event.src_path}")
+        file_info = scan_directory(self.directory)
+        print_statistics(file_info, self.save_directory)
+
+
+def start_watching(directory, save_directory, interval):
+    """ 启动目录监听 """
+    event_handler = DirectoryHandler(directory, save_directory)
+    observer = Observer()
+    observer.schedule(event_handler, directory, recursive=True)
+    observer.start()
+    print(f"开始监听目录: {directory}，每 {interval} 秒检查一次")
+
+    try:
+        while True:
+            time.sleep(interval)  # 使用监听间隔时间
+    except KeyboardInterrupt:
+        observer.stop()
+        print("监听停止")
+    observer.join()
 
 
 # ------------------------------ 主程序入口 ------------------------------
 if __name__ == "__main__":
-    # 获取当前脚本的路径，并获取配置的根目录路径（如果为空，则使用脚本所在目录）
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+    parser = argparse.ArgumentParser(description="文件夹统计工具")
+    parser.add_argument(
+        "-m", "--mode", type=int, choices=[0, 1], default=1,
+        help="运行模式：1 为手动扫描模式，0 为实时监听模式（默认: 1）"
+    )
+    parser.add_argument(
+        "-i", "--interval", type=float, default=1.0,
+        help="监听间隔时间，仅在 0 模式下有效（单位：秒，默认: 1.0）"
+    )
+    args = parser.parse_args()
 
     # 读取 JSON 配置文件
     config = load_config()
-
     root_directory = config.get("root_directory", "")
-    if not root_directory:
-        root_directory = script_dir  # 如果为空，使用当前脚本所在目录作为根目录
+    save_directory = config.get("png_save_directory", "")
 
-    print(f"自动使用根目录：{root_directory}")
+    if not root_directory:
+        root_directory = os.path.dirname(os.path.abspath(__file__))  # 如果为空，使用当前脚本目录作为根目录
+
+    if not save_directory:
+        save_directory = resource_path("output")  # 如果为空，默认保存到 output
 
     # 设置中文字体
     set_chinese_font(config)
 
-    # 扫描该目录及子目录中的所有文件
-    file_info = scan_directory(root_directory)
-
-    # 判断运行模式和刷新间隔
-    if len(sys.argv) < 2:
-        print("错误: 缺少模式参数！")
-        sys.exit(1)
-
-    mode = int(sys.argv[1])  # 0: 一次性生成图表, 1: 定时刷新
-    if mode == 1:
-        if len(sys.argv) < 3:
-            print("错误: 缺少时间参数！")
-            sys.exit(1)
-
-        interval = int(sys.argv[2])  # 定时刷新间隔（秒）
-        while True:
-            clear_terminal()  # 清空终端输出
-            print_statistics(file_info)
-            time.sleep(interval)  # 每隔一定时间刷新一次图表
-    else:
-        print_statistics(file_info)  # 仅生成一次图表
+    if args.mode == 1:
+        # 手动扫描模式
+        print("进入 1 模式：手动扫描目录")
+        file_info = scan_directory(root_directory)
+        print_statistics(file_info, save_directory)
+    elif args.mode == 0:
+        # 实时监听模式
+        print(f"进入 0 模式：实时监听目录，每 {args.interval} 秒检查一次")
+        start_watching(root_directory, save_directory, args.interval)
