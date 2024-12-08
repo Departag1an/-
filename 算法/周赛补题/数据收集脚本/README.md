@@ -18,7 +18,7 @@ Python 脚本，用于分析 Markdown 文件并生成统计图表。支持中文
 **环境要求**
 
 - Python 3.x
-- 安装 `matplotlib` 库
+- 安装 `matplotlib`与 `watchdog`库
 
 ---
 
@@ -30,10 +30,10 @@ Python 脚本，用于分析 Markdown 文件并生成统计图表。支持中文
 pip install -r requirements.txt
 ```
 
-或者单独安装 `matplotlib`：
+或者单独安装 `matplotlib`与 `watchdog`：
 
 ```
-pip install matplotlib
+pip install matplotlib watchdog
 ```
 
 ---
