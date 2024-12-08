@@ -82,7 +82,7 @@ def analyze_filename(filename):
     return None, None
 
 
-def scan_directory(directory):
+def scan_directory(directory, mode):
     """ 扫描目录及子目录中的所有文件并提取信息 """
     file_info = []
     for root, dirs, files in os.walk(directory):
@@ -91,6 +91,8 @@ def scan_directory(directory):
                 div_match, types = analyze_filename(filename)
                 if div_match:
                     file_info.append((div_match, types))
+                # 打印文件扫描日志，无论是在 1 模式还是 0 模式下
+                print(f"扫描文件: {filename}")
     return file_info
 
 
@@ -148,20 +150,24 @@ def print_statistics(file_info, save_directory):
 # ------------------------------ 文件夹监听 ------------------------------
 class DirectoryHandler(FileSystemEventHandler):
     """ 文件夹变化事件处理 """
-    def __init__(self, directory, save_directory):
+    def __init__(self, directory, save_directory, mode):
         self.directory = directory
         self.save_directory = save_directory
+        self.mode = mode
 
     def on_any_event(self, event):
         """ 当任何文件发生变化时，重新扫描并更新统计 """
+        if event.event_type != 'modified':  # 仅处理文件修改事件
+            return
+        # 打印文件变化日志
         print(f"检测到变化: {event.src_path}")
-        file_info = scan_directory(self.directory)
+        file_info = scan_directory(self.directory, self.mode)
         print_statistics(file_info, self.save_directory)
 
 
-def start_watching(directory, save_directory, interval):
+def start_watching(directory, save_directory, interval, mode):
     """ 启动目录监听 """
-    event_handler = DirectoryHandler(directory, save_directory)
+    event_handler = DirectoryHandler(directory, save_directory, mode)
     observer = Observer()
     observer.schedule(event_handler, directory, recursive=True)
     observer.start()
@@ -206,9 +212,9 @@ if __name__ == "__main__":
     if args.mode == 1:
         # 手动扫描模式
         print("进入 1 模式：手动扫描目录")
-        file_info = scan_directory(root_directory)
+        file_info = scan_directory(root_directory, args.mode)
         print_statistics(file_info, save_directory)
     elif args.mode == 0:
         # 实时监听模式
         print(f"进入 0 模式：实时监听目录，每 {args.interval} 秒检查一次")
-        start_watching(root_directory, save_directory, args.interval)
+        start_watching(root_directory, save_directory, args.interval, args.mode)
