@@ -150,7 +150,10 @@
     "xstring": "cpp",
     "xtr1common": "cpp",
     "xtree": "cpp",
-    "xutility": "cpp"
+    "xutility": "cpp",
+    "codecvt": "cpp",
+    "cuchar": "cpp",
+    "shared_mutex": "cpp"
   },
   "Codegeex.RepoIndex": true
 }
