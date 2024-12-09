@@ -109,6 +109,9 @@ def plot_statistics(div_counts, type_counts, save_path):
     plt.title("div1到div5分布")
     plt.xlabel("div类别")
     plt.ylabel("数量")
+    
+    # 旋转 x 轴的标签，避免重叠
+    plt.xticks(rotation=45, ha='right')
 
     # 类型分布
     plt.subplot(1, 2, 2)
@@ -116,6 +119,9 @@ def plot_statistics(div_counts, type_counts, save_path):
     plt.title("类型分布")
     plt.xlabel("类型")
     plt.ylabel("数量")
+
+    # 旋转 x 轴的标签，避免重叠
+    plt.xticks(rotation=45, ha='right')
 
     plt.tight_layout()
     plt.savefig(save_path)
