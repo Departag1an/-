@@ -100,30 +100,40 @@ def scan_directory(directory, mode):
 
 # ------------------------------ 绘图和输出 ------------------------------
 def plot_statistics(div_counts, type_counts, save_path):
-    """ 可视化统计信息并保存为 PNG 图片 """
-    plt.figure(figsize=(12, 6))
+    """ 可视化统计信息并保存为 PNG 图片，自动调整图片质量和字体排版 """
+    # 根据数据规模动态调整图像大小和字体
+    num_divs = len(div_counts)
+    num_types = len(type_counts)
+
+    # 动态调整图表大小
+    fig_width = max(12, num_divs * 0.8)  # 确保图表宽度至少为12
+    fig_height = max(6, num_types * 0.6)  # 根据类型数量调整高度
+
+    # 设置 DPI，提高图片清晰度
+    dpi = 150 if num_divs * num_types <= 100 else 200  # 根据数据规模决定 DPI
+
+    plt.figure(figsize=(fig_width, fig_height), dpi=dpi)
 
     # div1-div5 分布
     plt.subplot(1, 2, 1)
     plt.bar(div_counts.keys(), div_counts.values(), color='lightblue')
-    plt.title("div1到div5分布")
-    plt.xlabel("div类别")
-    plt.ylabel("数量")
-    
-    # 旋转 x 轴的标签，避免重叠
-    plt.xticks(rotation=45, ha='right')
+    plt.title("div1到div5分布", fontsize=14)
+    plt.xlabel("div类别", fontsize=12)
+    plt.ylabel("数量", fontsize=12)
+    plt.xticks(rotation=45, ha='right', fontsize=10)  # 动态调整字体大小
 
     # 类型分布
     plt.subplot(1, 2, 2)
     plt.bar(type_counts.keys(), type_counts.values(), color='lightgreen')
-    plt.title("类型分布")
-    plt.xlabel("类型")
-    plt.ylabel("数量")
+    plt.title("类型分布", fontsize=14)
+    plt.xlabel("类型", fontsize=12)
+    plt.ylabel("数量", fontsize=12)
+    plt.xticks(rotation=45, ha='right', fontsize=10)  # 动态调整字体大小
 
-    # 旋转 x 轴的标签，避免重叠
-    plt.xticks(rotation=45, ha='right')
-
+    # 优化布局，避免标签重叠
     plt.tight_layout()
+
+    # 保存图片
     plt.savefig(save_path)
     print(f"统计图表已保存到：{save_path}")
 
@@ -158,6 +168,7 @@ def print_statistics(file_info, save_directory):
 # ------------------------------ 文件夹监听 ------------------------------
 class DirectoryHandler(FileSystemEventHandler):
     """ 文件夹变化事件处理 """
+
     def __init__(self, directory, save_directory, mode, interval):
         self.directory = directory
         self.save_directory = save_directory
@@ -231,18 +242,12 @@ if __name__ == "__main__":
     if not root_directory:
         root_directory = os.path.dirname(os.path.abspath(__file__))  # 如果为空，使用当前脚本目录作为根目录
 
-    if not save_directory:
-        save_directory = resource_path("output")  # 如果为空，默认保存到 output
-
-    # 设置中文字体
-    set_chinese_font(config)
+    set_chinese_font(config)  # 设置中文字体
 
     if args.mode == 1:
-        # 手动扫描模式
-        print("进入 1 模式：手动扫描目录")
+        print("手动扫描模式")
         file_info = scan_directory(root_directory, args.mode)
         print_statistics(file_info, save_directory)
-    elif args.mode == 0:
-        # 实时监听模式
-        print(f"进入 0 模式：实时监听目录，每 {args.interval} 秒检查一次")
+    else:
+        print("实时监听模式")
         start_watching(root_directory, save_directory, args.interval, args.mode)
