@@ -1,0 +1,1 @@
+[转到题目](https://ac.nowcoder.com/acm/contest/19304/N)
