@@ -1,4 +1,4 @@
-[转到题目](https://ac.nowcoder.com/acm/contest/19304/N)
+# [转到题目](https://ac.nowcoder.com/acm/contest/19304/N)
 
 ## 解题思路
 **首先,题目要求的是3个是数的运算最大值**
