@@ -1,0 +1,1 @@
+# [转到题目](https://codeforces.com/contest/2050/problem/C)
