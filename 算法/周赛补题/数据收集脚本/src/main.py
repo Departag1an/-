@@ -156,15 +156,20 @@ def plot_statistics(div_counts, type_counts, save_path):
     # 创建图像并设置大小和分辨率
     plt.figure(figsize=(fig_width, fig_height), dpi=dpi)
 
+    # 指定 div 的排序顺序
+    div_order = ['div1', 'div2', 'div3', 'div4', 'div5']
+    # 按照指定顺序绘制 div 的条形图
+    ordered_div_counts = {div: div_counts[div] for div in div_order if div in div_counts}
+
     # div1-div5 分布
     plt.subplot(1, 2, 1)
-    plt.bar(div_counts.keys(), div_counts.values(), color='lightblue')
+    plt.bar(ordered_div_counts.keys(), ordered_div_counts.values(), color='lightblue')
     plt.title("div1到div5分布", fontsize=font_size)
     plt.xlabel("div类别", fontsize=font_size)
     plt.ylabel("数量", fontsize=font_size)
 
     # 动态调整字体大小，根据图像尺寸
-    plt.xticks(rotation=45, ha='right', fontsize=max(font_size, fig_width // num_divs))
+    plt.xticks(rotation=45, ha='right', fontsize=max(font_size, fig_width // len(ordered_div_counts)))
 
     # 类型分布
     plt.subplot(1, 2, 2)
@@ -182,7 +187,6 @@ def plot_statistics(div_counts, type_counts, save_path):
     # 保存图片
     plt.savefig(save_path)
     print(f"统计图表已保存到：{save_path}")
-
 
 def print_statistics(file_info, save_directory):
     """ 打印统计信息并调用可视化输出 """
