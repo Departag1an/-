@@ -102,89 +102,84 @@ def scan_directory(directory, mode):
 # ------------------------------ 绘图和输出 ------------------------------
 def plot_statistics(div_counts, type_counts, save_path):
     """ 可视化统计信息并保存为 PNG 图片，自动调整图片质量和字体排版 """
-
+    
     # 获取 divs 和 types 的数量
     num_divs = len(div_counts)
     num_types = len(type_counts)
-
+    
     # 计算数据规模：divs 和 types 的乘积
     data_size = num_divs * num_types
-
+    
     # 根据数据规模调整图像大小、DPI 和字体
     if data_size <= 20:
-        # 非常小的数据集
         fig_width = max(10, num_divs * 0.6)
         fig_height = max(6, num_types * 0.4)
         dpi = 120  # 非常小数据使用低 DPI
         font_size = 8
     elif data_size <= 50:
-        # 小数据集
         fig_width = max(12, num_divs * 0.7)
         fig_height = max(7, num_types * 0.5)
         dpi = 150
         font_size = 10
     elif data_size <= 100:
-        # 中小数据集
         fig_width = max(14, num_divs * 0.8)
         fig_height = max(8, num_types * 0.6)
         dpi = 175
         font_size = 12
     elif data_size <= 200:
-        # 中等数据集
         fig_width = max(16, num_divs * 1.0)
         fig_height = max(10, num_types * 0.7)
         dpi = 200
         font_size = 14
     elif data_size <= 500:
-        # 大数据集
         fig_width = max(18, num_divs * 1.2)
         fig_height = max(12, num_types * 0.8)
         dpi = 225
         font_size = 16
     elif data_size <= 1000:
-        # 很大的数据集
         fig_width = max(20, num_divs * 1.5)
         fig_height = max(14, num_types * 1.0)
         dpi = 250
         font_size = 18
     else:
-        # 超大数据集
         fig_width = max(24, num_divs * 2.0)
         fig_height = max(18, num_types * 1.2)
         dpi = 300
         font_size = 20
-
+    
     # 创建图像并设置大小和分辨率
     plt.figure(figsize=(fig_width, fig_height), dpi=dpi)
-
+    
     # 指定 div 的排序顺序
     div_order = ['div1', 'div2', 'div3', 'div4', 'div5']
     # 按照指定顺序绘制 div 的条形图
     ordered_div_counts = {div: div_counts[div] for div in div_order if div in div_counts}
-
+    
     # div1-div5 分布
     plt.subplot(1, 2, 1)
     plt.bar(ordered_div_counts.keys(), ordered_div_counts.values(), color='lightblue')
     plt.title("div1到div5分布", fontsize=font_size)
     plt.xlabel("div类别", fontsize=font_size)
     plt.ylabel("数量", fontsize=font_size)
-
+    
     # 动态调整字体大小，根据图像尺寸
-    plt.xticks(rotation=45, ha='right', fontsize=max(font_size, fig_width // len(ordered_div_counts)))
-
+    xticks_fontsize = max(font_size, fig_width // len(ordered_div_counts))
+    plt.xticks(rotation=45, ha='right', fontsize=xticks_fontsize)
+    
     # 类型分布
     plt.subplot(1, 2, 2)
     plt.bar(type_counts.keys(), type_counts.values(), color='lightgreen')
     plt.title("类型分布", fontsize=font_size)
     plt.xlabel("类型", fontsize=font_size)
     plt.ylabel("数量", fontsize=font_size)
-
+    
     # 动态调整字体大小
-    plt.xticks(rotation=45, ha='right', fontsize=max(font_size, fig_width // num_types))
-
+    xticks_fontsize = max(font_size, fig_width // num_types)
+    plt.xticks(rotation=45, ha='right', fontsize=xticks_fontsize)
+    
     # 优化布局，避免标签重叠
     plt.tight_layout()
-
+    
     # 保存图片
     plt.savefig(save_path)
     print(f"统计图表已保存到：{save_path}")
