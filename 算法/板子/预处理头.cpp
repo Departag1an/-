@@ -9,4 +9,5 @@ using namespace std;
 #define s64 size_t
 #define f32 float
 #define f64 double
+#define int long long
 #endif
