@@ -1,4 +1,4 @@
-# Visit my repo: https://github.com/Yawn-Sean/Daily_CF_Problems
+# Visit my repo: https://github.com/Departag1an/-
 standard_input, packages, output_together = 1, 1, 0
 dfs, hashing, read_from_file = 0, 0, 0
 de = 1
