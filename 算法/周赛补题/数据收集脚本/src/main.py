@@ -146,9 +146,12 @@ def count_author_contributions(file_info):
 
 # 其他函数保持不变...
 def plot_author_ranking(author_counts, save_path):
-    """ 可视化作者创作量排名，并保存为 PNG 图片 """
-    labels = list(author_counts.keys())
-    sizes = list(author_counts.values())
+    """可视化作者创作量排名，并保存为 PNG 图片"""
+    # 根据创作量对作者进行排序，创作量多的在前
+    sorted_author_counts = sorted(author_counts.items(), key=lambda item: item[1], reverse=False)
+    
+    labels = [author for author, count in sorted_author_counts]
+    sizes = [count for author, count in sorted_author_counts]
     
     plt.figure(figsize=(10, 8), dpi=150)
     plt.barh(labels, sizes, color='skyblue')
@@ -159,7 +162,7 @@ def plot_author_ranking(author_counts, save_path):
     plt.savefig(save_path)
     print(f"作者排名榜图表已保存到：{save_path}")
     plt.close()
-
+   
 def scan_directory(directory, mode):
     """ 扫描目录及子目录中的所有文件并提取信息 """
     file_info = []
