@@ -157,7 +157,7 @@ def plot_author_ranking(author_counts, save_path):
     plt.barh(labels, sizes, color='skyblue')
     plt.xlabel("创作量")
     plt.ylabel("作者")
-    plt.title("作者创作量排名榜")
+    plt.title("Ranking")
     plt.tight_layout()
     plt.savefig(save_path)
     print(f"作者排名榜图表已保存到：{save_path}")
