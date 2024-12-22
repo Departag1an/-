@@ -8,9 +8,13 @@ import argparse
 from collections import defaultdict
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+import matplotlib
+matplotlib.use('Agg')  # 使用非 GUI 后端
 import matplotlib.pyplot as plt
 from matplotlib import font_manager
 from threading import Timer  # 导入定时器
+
+
 
 
 # ------------------------------ 配置文件处理 ------------------------------
