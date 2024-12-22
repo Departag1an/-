@@ -10,4 +10,5 @@
 
 ### 刷题训练数据
 
-![alt text](算法/周赛补题/数据收集脚本/img/训练数据.png)
+![alt text](算法/周赛补题/数据收集脚本/img/div_distribution.png)
+![alt text](算法/周赛补题/数据收集脚本/img/type_distribution.png)
