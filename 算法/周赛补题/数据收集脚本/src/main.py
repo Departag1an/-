@@ -79,15 +79,86 @@ def set_chinese_font(config=None):
 pattern = r"^(?P<difficulty>.*?)_(?P<types>\{.*?\})_(?P<title>.*?)\.md$"
 
 
-def analyze_filename(filename):
-    """ 解析文件名并返回 div 和类型信息 """
+import re
+
+# 用于解析文件名的正则表达式
+pattern = r"^(?P<difficulty>.*?)_(?P<types>\{.*?\})_(?P<title>.*?)\.md$"
+author_pattern = r"\[(.*?)\]"  # 用于匹配 [作者1;作者2] 格式
+
+import re
+from collections import defaultdict
+
+# 用于解析文件名的正则表达式
+pattern = r"^(?P<difficulty>.*?)_(?P<types>\{.*?\})_(?P<title>.*?)\.md$"
+author_pattern = r"\[(.*?)\]"  # 用于匹配 [作者1;作者2...作者n] 格式
+
+import re
+from collections import defaultdict
+
+# 用于解析文件名的正则表达式
+pattern = r"^(?P<difficulty>.*?)_(?P<types>\{.*?\})_(?P<title>.*?)\.md$"
+author_pattern = r"\[(.*?)\]"  # 用于匹配 [作者1;作者2...作者n] 格式
+
+import re
+from collections import defaultdict
+
+# 用于解析文件名的正则表达式
+pattern = r"^(?P<difficulty>.*?)_(?P<types>\{.*?\})_(?P<title>.*?)\.md$"
+author_pattern = r"\[(.*?)\]"  # 用于匹配 [作者1;作者2...作者n] 格式
+
+def analyze_filename(filename, directory):
+    """解析文件名并返回 div 和类型信息，同时读取文件第一行以确定作者"""
     match = re.match(pattern, filename)
     if match:
         types = match.group("types")[1:-1].split(";")  # 去除花括号并分割类型
         div_match = re.findall(r'div[1-5]', filename)
-        return div_match, types
-    return None, None
+        authors = None
+        try:
+            with open(os.path.join(directory, filename), 'r', encoding='utf-8') as file:
+                first_line = file.readline().strip()  # 读取第一行并去除前后空白字符
+                if first_line:
+                    # 尝试匹配 [作者1;作者2...作者n] 格式
+                    author_match = re.match(author_pattern, first_line)
+                    if author_match:
+                        authors = author_match.group(1).split(';')  # 分割作者
+                        authors = [a.strip() for a in authors if a.strip()]  # 去除空白字符和空字符串
+                    else:
+                        # 如果不符合 [作者1;作者2...作者n] 格式，尝试其他格式
+                        author_match = re.match(r'\s*作者?\s*:\s*(.*)', first_line)
+                        if author_match:
+                            authors = [author_match.group(1).strip()]  # 提取作者名并去除空白字符
+                        else:
+                            authors = [first_line]  # 如果不符合格式，直接使用第一行内容作为作者名
+        except Exception as e:
+            print(f"读取文件 {filename} 出错: {e}")
+        return div_match, types, authors
+    return None, None, None
 
+def count_author_contributions(file_info):
+    """统计每个作者的创作量"""
+    author_counts = defaultdict(int)
+    for _, _, authors in file_info:
+        if authors:
+            for author in authors:
+                if author:  # 确保作者名不为空
+                    author_counts[author] += 1
+    return author_counts
+
+# 其他函数保持不变...
+def plot_author_ranking(author_counts, save_path):
+    """ 可视化作者创作量排名，并保存为 PNG 图片 """
+    labels = list(author_counts.keys())
+    sizes = list(author_counts.values())
+    
+    plt.figure(figsize=(10, 8), dpi=150)
+    plt.barh(labels, sizes, color='skyblue')
+    plt.xlabel("创作量")
+    plt.ylabel("作者")
+    plt.title("作者创作量排名榜")
+    plt.tight_layout()
+    plt.savefig(save_path)
+    print(f"作者排名榜图表已保存到：{save_path}")
+    plt.close()
 
 def scan_directory(directory, mode):
     """ 扫描目录及子目录中的所有文件并提取信息 """
@@ -95,10 +166,9 @@ def scan_directory(directory, mode):
     for root, dirs, files in os.walk(directory):
         for filename in files:
             if filename.endswith(".md"):
-                div_match, types = analyze_filename(filename)
+                div_match, types, author = analyze_filename(filename, root)
                 if div_match:
-                    file_info.append((div_match, types))
-                # 打印文件扫描日志，无论是在 1 模式还是 0 模式下
+                    file_info.append((div_match, types, author))
                 print(f"扫描文件: {filename}")
     return file_info
 
@@ -168,17 +238,24 @@ def plot_type_distribution(type_counts, save_path):
     print(f"类型统计图表已保存到：{save_path}")
     plt.close()
 
+from collections import defaultdict
+
 def print_statistics(file_info, save_directory):
-    """ 打印统计信息并调用可视化输出 """
+    """打印统计信息并调用可视化输出"""
     div_counts = defaultdict(int)
     type_counts = defaultdict(int)
+    author_counts = defaultdict(int)
 
-    # 统计 div1-div5 分布和类型分布
-    for div_match, types in file_info:
+    # 统计 div1-div5 分布、类型分布和作者创作量
+    for div_match, types, authors in file_info:
         for div in div_match:
             div_counts[div] += 1
         for t in types:
             type_counts[t] += 1
+        if authors:  # 确保 authors 不为空
+            for author in authors:  # 遍历 authors 列表
+                if author:  # 确保作者名不为空
+                    author_counts[author] += 1
 
     # 输出文本统计
     print("div1到div5分布:")
@@ -189,18 +266,21 @@ def print_statistics(file_info, save_directory):
     for t, count in type_counts.items():
         print(f"{t}: {count} 个")
 
+    print("\n作者创作量排名榜:")
+    for author, count in author_counts.items():
+        print(f"{author}: {count} 个")
+
     # 确定保存路径
     div_save_path = os.path.join(save_directory, "div_distribution.png")
     type_save_path = os.path.join(save_directory, "type_distribution.png")
+    author_save_path = os.path.join(save_directory, "author_ranking.png")
     
     os.makedirs(save_directory, exist_ok=True)
 
-    # 分别保存 div 和 type 的统计图表
+    # 分别保存 div、type 和 author 的统计图表
     plot_div_distribution(div_counts, div_save_path)
     plot_type_distribution(type_counts, type_save_path)
-
-
-
+    plot_author_ranking(author_counts, author_save_path)
 # ------------------------------ 文件夹监听 ------------------------------
 class DirectoryHandler(FileSystemEventHandler):
     """ 文件夹变化事件处理 """

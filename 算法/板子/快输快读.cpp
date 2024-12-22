@@ -14,7 +14,7 @@ int I32(){
 	res *=f;
 	return res;
 }
-long long I64(){
+long long I64(){    
 	char chace = getchar();
 	int f= 1;
 	long long  res = 0;

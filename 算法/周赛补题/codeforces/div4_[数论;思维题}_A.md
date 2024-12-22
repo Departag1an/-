@@ -1,4 +1,4 @@
-
+作者:JNMC孙国庆
 ---
 
 # [转到题目](https://codeforces.com/contest/2048/problem/A)
