@@ -1,4 +1,4 @@
-作者： JNMC孙国庆
+[JNMC孙国庆]
 # [点击转到题目](https://ac.nowcoder.com/acm/contest/97439/C)
 
 ## 题目思路:

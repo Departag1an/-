@@ -1,4 +1,4 @@
-[JNMC孙国庆;A]
+[JNMC孙国庆]
 # [转到题目](https://codeforces.com/contest/2050/problem/D)
 ## 题目思路
 **我们想最大化这个整体**

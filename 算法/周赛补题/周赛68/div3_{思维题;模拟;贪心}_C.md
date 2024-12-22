@@ -1,4 +1,4 @@
-作者： JNMC孙国庆
+[JNMC孙国庆]
 Title: C. [Two Arrays](https://ac.nowcoder.com/acm/contest/95928/C)
 Tags: 周赛, 贪心
 Author: <JNMC孙国庆>

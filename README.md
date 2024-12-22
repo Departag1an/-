@@ -12,3 +12,4 @@
 
 ![alt text](算法/周赛补题/数据收集脚本/img/div_distribution.png)
 ![alt text](算法/周赛补题/数据收集脚本/img/type_distribution.png)
+![alt text](算法/周赛补题/数据收集脚本/img/author_ranking.png)

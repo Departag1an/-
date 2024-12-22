@@ -1,4 +1,4 @@
-作者： JNMC孙国庆
+[JNMC孙国庆]
 # [转到题目](https://ac.nowcoder.com/acm/contest/97443/C)
 
 这种题目，看起来很像某种算法题，但是实际上就是一个显然性质的思维推导

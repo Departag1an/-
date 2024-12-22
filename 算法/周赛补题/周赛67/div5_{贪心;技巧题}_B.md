@@ -1,4 +1,4 @@
-作者:JNMC孙国庆
+[JNMC孙国庆]
 # [转到题目](https://ac.nowcoder.com/acm/contest/95016/B)
 
 本题目的关键是,我们要观察到，用到了浮点数运算

@@ -1,4 +1,4 @@
-作者: 程家贺
+[程家贺]
 #### https://ac.nowcoder.com/acm/contest/95016/E
 
 
