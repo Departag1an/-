@@ -1,6 +1,7 @@
 **Made by Sungq Liyk and Chengjh**
  
-# 算法 C++ 
+# 算法
+#### `C++/python/java` 刷题训练营
 # **训练平台**
 目标未达，你会不会在自己头上放一把刀呢?
 ## 题单:
